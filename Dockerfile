@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
     libboost-thread-dev \
     swig && \
     apt-get clean
-RUN pip install numpy
-RUN pip install pymesh2
+RUN pip install --no-cache numpy scipy
+RUN pip install --no-cache pymesh2
 RUN pip install --no-cache notebook pythreejs
 
 RUN cd /tmp \
@@ -33,5 +33,7 @@ RUN adduser --disabled-password \
     --gecos "Default user" \
     --uid ${NB_UID} \
     ${NB_USER}
+RUN cp /tmp/petrify/examples/*.ipynb ${HOME}
+RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
 WORKDIR ${HOME}
 USER ${NB_USER}
