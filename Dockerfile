@@ -29,7 +29,10 @@ ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 
-RUN mkdir -p ${HOME}/examples && cp /tmp/petrify/examples/*.ipynb ${HOME}/examples
+RUN mkdir -p ${HOME}/examples \
+    && cp /tmp/petrify/examples/*.ipynb ${HOME}/examples \
+    && cp /tmp/petrify/examples/*.svg ${HOME}/examples \
+    && cp /tmp/petrify/examples/*.stl ${HOME}/examples
 RUN chown -R ${NB_USER} ${HOME}
 WORKDIR ${HOME}
 USER ${NB_USER}
