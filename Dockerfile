@@ -1,6 +1,6 @@
-FROM python:3.6
-WORKDIR /root/
+FROM jupyter/minimal-notebook
 
+USER root
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     swig && \
     apt-get clean
 RUN pip install --no-cache numpy scipy
-RUN pip install --no-cache pymesh2
+RUN LDFLAGS=-fno-lto pip install --no-cache pymesh2
 RUN pip install --no-cache notebook pythreejs
 
 RUN cd /tmp \
@@ -29,11 +29,7 @@ ARG NB_UID=1000
 ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-RUN cp /tmp/petrify/examples/*.ipynb ${HOME}
-RUN chown -R ${NB_USER}:${NB_USER} ${HOME}
+RUN mkdir -p ${HOME}/examples && cp /tmp/petrify/examples/*.ipynb ${HOME}/examples
+RUN chown -R ${NB_USER} ${HOME}
 WORKDIR ${HOME}
 USER ${NB_USER}
